@@ -1,36 +1,24 @@
-import React, { Component } from 'react';
-import { BrowserRouter, Route, Switch } from 'react-router-dom';
-import { connect } from 'react-redux';
-import * as actions from '../actions';
+"use client"
 
-import Header from './Header';
+import React from 'react';
+import { useDispatch } from 'react-redux';
+
+import { fetchUser } from '../actions';
+
 import Landing from './Landing';
-import Dashboard from './Dashboard';
-import BlogNew from './blogs/BlogNew';
-import BlogShow from './blogs/BlogShow';
 
-class App extends Component {
-  componentDidMount() {
-    this.props.fetchUser();
-  }
+const App = () => {
+  const dispatch = useDispatch()
 
-  render() {
-    return (
-      <div className="container">
-        <BrowserRouter>
-          <div>
-            <Header />
-            <Switch>
-              <Route path="/blogs/new" component={BlogNew} />
-              <Route exact path="/blogs/:_id" component={BlogShow} />
-              <Route path="/blogs" component={Dashboard} />
-              <Route path="/" component={Landing} />
-            </Switch>
-          </div>
-        </BrowserRouter>
-      </div>
-    );
-  }
+  React.useEffect(() => {
+    dispatch(fetchUser());
+  }, [dispatch])
+
+  return (
+    <div className="container">
+      <Landing />
+    </div>
+  );
 }
 
-export default connect(null, actions)(App);
+export default App;

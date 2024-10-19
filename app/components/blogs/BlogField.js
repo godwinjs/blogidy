@@ -1,6 +1,6 @@
 import React from 'react';
 
-export default ({ input, label, meta: { error, touched } }) => {
+export default function BlogField({ input, label, meta: { error, touched } }) {
   return (
     <div className={input.name}>
       <label>{label}</label>

@@ -1,27 +1,32 @@
+"use client"
+
 // BlogFormReview shows users their form inputs for review
 import _ from 'lodash';
-import React, { Component } from 'react';
-import { connect } from 'react-redux';
-import formFields from './formFields';
-import { withRouter } from 'react-router-dom';
+import React from 'react';
+import { useSelector } from 'react-redux';
+import { formFields } from './formFields';
 import * as actions from '../../actions';
 
-class BlogFormReview extends Component {
-  renderFields() {
-    const { formValues } = this.props;
+const BlogFormReview = (props) => {
+  const state = useSelector((state) => state)
+  console.log("BlogFormReview>props",props)
+  console.log("BlogFormReview>state", state)
+
+
+  const renderFields = () => {
 
     return _.map(formFields, ({ name, label }) => {
       return (
         <div key={name}>
           <label>{label}</label>
-          <div>{formValues[name]}</div>
+          <div>{state.formValues[name]}</div>
         </div>
       );
     });
   }
 
-  renderButtons() {
-    const { onCancel } = this.props;
+  renderButtons = () => {
+    const { onCancel } = props;
 
     return (
       <div>
@@ -39,28 +44,22 @@ class BlogFormReview extends Component {
     );
   }
 
-  onSubmit(event) {
+  const onSubmit = (event) =>  {
     event.preventDefault();
 
-    const { submitBlog, history, formValues } = this.props;
+    const { submitBlog, history, formValues } = state; //&&|| props
 
-    submitBlog(formValues, history);
+    dispatch(submitBlog(formValues, history));
   }
 
-  render() {
-    return (
-      <form onSubmit={this.onSubmit.bind(this)}>
-        <h5>Please confirm your entries</h5>
-        {this.renderFields()}
+  return (
+    <form onSubmit={() => onSubmit()}>
+      <h5>Please confirm your entries</h5>
+      {renderFields()}
 
-        {this.renderButtons()}
-      </form>
-    );
-  }
+      {this.renderButtons()}
+    </form>
+  );
 }
 
-function mapStateToProps(state) {
-  return { formValues: state.form.blogForm.values };
-}
-
-export default connect(mapStateToProps, actions)(withRouter(BlogFormReview));
+export default BlogFormReview;

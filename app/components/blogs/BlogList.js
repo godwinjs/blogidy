@@ -1,16 +1,21 @@
-import React, { Component } from 'react';
+"use client"
+
+import React from 'react';
 import map from 'lodash/map';
-import { connect } from 'react-redux';
-import { Link } from 'react-router-dom';
+import { useDispatch } from 'react-redux';
+import Link from 'next/link';
 import { fetchBlogs } from '../../actions';
 
-class BlogList extends Component {
-  componentDidMount() {
-    this.props.fetchBlogs();
-  }
+const BlogList = () => {
+  const dispatch = useDispatch();
+  const blogs = useSelector((state) => state)
 
-  renderBlogs() {
-    return map(this.props.blogs, blog => {
+  React.useEffect(() => {
+    dispatch(fetchBlogs());
+  }, [dispatch])
+
+  const renderBlogs = () => {
+    return map(blogs, blog => {
       return (
         <div className="card darken-1 horizontal" key={blog._id}>
           <div className="card-stacked">
@@ -19,7 +24,7 @@ class BlogList extends Component {
               <p>{blog.content}</p>
             </div>
             <div className="card-action">
-              <Link to={`/blogs/${blog._id}`}>Read</Link>
+              <Link href={`/blogs/${blog._id}`}>Read</Link>
             </div>
           </div>
         </div>
@@ -27,13 +32,7 @@ class BlogList extends Component {
     });
   }
 
-  render() {
-    return <div>{this.renderBlogs()}</div>;
-  }
+  return <div>{renderBlogs()}</div>;
 }
 
-function mapStateToProps({ blogs }) {
-  return { blogs };
-}
-
-export default connect(mapStateToProps, { fetchBlogs })(BlogList);
+export default BlogList;

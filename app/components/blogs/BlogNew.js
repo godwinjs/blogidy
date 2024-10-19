@@ -1,37 +1,35 @@
+"use client"
 // BlogNew shows BlogForm and BlogFormReview
-import React, { Component } from 'react';
+import React from 'react';
 import { reduxForm } from 'redux-form';
 import BlogForm from './BlogForm';
 import BlogFormReview from './BlogFormReview';
 
-class BlogNew extends Component {
-  state = { showFormReview: false };
+const BlogNew = (props) => {
+  const [ showFormReview, setShowFormReview ] = React.useState(false);
+  console.log("BlogNew", props)
 
-  renderContent() {
-    if (this.state.showFormReview) {
+  const renderContent = () => {
+    if (showFormReview) {
       return (
         <BlogFormReview
-          onCancel={() => this.setState({ showFormReview: false })}
+          props={{...props, onCancel: setShowFormReview(false)}}
         />
       );
     }
 
     return (
       <BlogForm
-        onBlogSubmit={() => this.setState({ showFormReview: true })}
+      props={{...props, onCancel: setShowFormReview(false)}}
       />
     );
   }
 
-  render() {
-    return (
-      <div>
-        {this.renderContent()}
-      </div>
-    );
-  }
+  return (
+    <div>
+      {renderContent()}
+    </div>
+  );
 }
 
-export default reduxForm({
-  form: 'blogForm'
-})(BlogNew);
+export default reduxForm({ form: 'blogForm'})(BlogNew);
