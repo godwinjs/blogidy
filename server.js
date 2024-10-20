@@ -3,6 +3,7 @@ const express = require('express');
 const next = require('next');
 const mongoose = require('mongoose');
 const cookieSession = require('cookie-session');
+const session = require('express-session');
 //
 require('dotenv').config();
 //
@@ -24,16 +25,24 @@ const handle = server.getRequestHandler();
 
 
 server.prepare().then(() => {
+    
     const app = express();
 
-    // middlewares
     app.use(bodyParser.json());
-    app.use(
-        cookieSession({
-          maxAge: 30 * 24 * 60 * 60 * 1000,
-          keys: [keys.cookieKey]
-        })
-      );
+    // app.use(
+    //     cookieSession({
+    //         maxAge: 30 * 24 * 60 * 60 * 1000,
+    //         keys: [keys.cookieKey]
+    //     })
+    //     );
+    // Configure the session middleware
+    app.use(session({
+        secret: 'yourSecretKey',  // You should use an environment variable for security
+        resave: false,            // Don't save session if unmodified
+        saveUninitialized: true,  // Save uninitialized sessions (for login)
+        cookie: { secure: false } // Set to true in production when using HTTPS
+    }));
+    // 
     app.use(passport.initialize());
     app.use(passport.session());
     
