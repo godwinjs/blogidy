@@ -6,8 +6,8 @@ import Link from 'next/link';
 import { useSelector, useDispatch } from 'react-redux';
 
 const Header = () => {
-  const auth = useSelector((state) => state.auth)
-  console.log("Header", auth)
+  const auth = useSelector((state) => state.auth) //state: { auth: null, form: {}, blogs: {}}
+  console.log("Header>auth", auth)
 
   const renderContent = () => {
     switch (auth) {
