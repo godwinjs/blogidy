@@ -2,13 +2,15 @@
 
 import React from 'react';
 import map from 'lodash/map';
-import { useDispatch } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import Link from 'next/link';
-import { fetchBlogs } from '../../actions';
+import { usePathname } from 'next/navigation';
+import { fetchBlogs, fetchPath } from '../../actions';
 
 const BlogList = () => {
   const dispatch = useDispatch();
-  const blogs = useSelector((state) => state)
+  const blogs = useSelector((state) => state.blogs)
+  console.log("blogs>BlogList", blogs)
 
   React.useEffect(() => {
     dispatch(fetchBlogs());
