@@ -1,7 +1,6 @@
 import BlogShow from '../components/blogs/BlogShow';
-// import Dashboard from './Dashboard';
+import Dashboard from '@/app/components/Dashboard';
 
-export default function New(props) {
-    console.log("Blogs>New", props)
-    return <BlogShow props={props} />
+export default function Blogs() {
+    return <Dashboard />
 }
