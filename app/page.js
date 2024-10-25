@@ -1,12 +1,9 @@
 "use client"
 
+import React from 'react';
 import App from "./components/App";
-import Header from "./components/Header";
 
-export default function Home(props) {
-  console.log("Home>App", props)
-  return (<>
-            <Header />
-            <App />
-          </>);
+export default function Home() {
+
+  return (<App />);
 }
