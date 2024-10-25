@@ -8,8 +8,25 @@ import Link from 'next/link';
 import BlogField from './BlogField';
 import { formFields } from './formFields';
 
+import { useDispatch } from 'react-redux';
+import { setShowFormReview } from '@/app/actions';
+
 const BlogForm = (props) =>  {
-  console.log("BlogForm > props",props)
+  const dispatch = useDispatch();
+
+  React.useEffect(() => {
+    window.addEventListener('submit', (e) => {
+      props.handleSubmit(() => dispatch(setShowFormReview(true)));
+      dispatch( setShowFormReview(true) );
+      
+    })
+
+    // return () => {
+    //   window.removeEventListener('submit', (e) => {
+    //     console.log(e)
+    //   })
+    // }
+  }, [])
 
   const renderFields = () => {
     return _.map(formFields, ({ label, name }) => {
@@ -27,7 +44,7 @@ const BlogForm = (props) =>  {
 
   return (
     <div>
-      <form onSubmit={props.handleSubmit(props.onBlogSubmit)}>
+      <form>
         {renderFields()}
         <Link href="/blogs" className="red btn-flat white-text">
           Cancel
