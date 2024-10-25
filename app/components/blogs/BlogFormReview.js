@@ -3,15 +3,21 @@
 // BlogFormReview shows users their form inputs for review
 import _ from 'lodash';
 import React from 'react';
+import { reduxForm } from 'redux-form';
 import { useSelector } from 'react-redux';
 import { formFields } from './formFields';
-import * as actions from '../../actions';
+import { submitBlog } from '../../actions';
+import { useRouter } from 'next/navigation';
+
+import { useDispatch } from 'react-redux';
+import { setShowFormReview } from '@/app/actions';
 
 const BlogFormReview = (props) => {
-  const state = useSelector((state) => state)
-  console.log("BlogFormReview>props",props)
-  console.log("BlogFormReview>state", state)
-
+  const formValues = useSelector((state) => state.form)
+  const router = useRouter();
+  const dispatch = useDispatch();
+  
+  console.log(formValues.blogForm.values, formFields)
 
   const renderFields = () => {
 
@@ -19,20 +25,19 @@ const BlogFormReview = (props) => {
       return (
         <div key={name}>
           <label>{label}</label>
-          <div>{state.formValues[name]}</div>
+          <div>{formValues.blogForm.values[name]}</div>
         </div>
       );
     });
   }
 
-  renderButtons = () => {
-    const { onCancel } = props;
+  const renderButtons = () => {
 
     return (
       <div>
         <button
           className="yellow darken-3 white-text btn-flat"
-          onClick={onCancel}
+          onClick={() => dispatch(setShowFormReview(false))}
         >
           Back
         </button>
@@ -46,20 +51,21 @@ const BlogFormReview = (props) => {
 
   const onSubmit = (event) =>  {
     event.preventDefault();
+    const history = router;
 
-    const { submitBlog, history, formValues } = state; //&&|| props
-
-    dispatch(submitBlog(formValues, history));
+    dispatch(submitBlog(formValues.blogForm.values, history));
+    history.push("/blogs")
   }
 
   return (
-    <form onSubmit={() => onSubmit()}>
+    <form onSubmit={(e) => onSubmit(e)}>
       <h5>Please confirm your entries</h5>
       {renderFields()}
 
-      {this.renderButtons()}
+      {renderButtons()}
     </form>
   );
 }
 
 export default BlogFormReview;
+// export default reduxForm({ form: 'blogForm'})(BlogFormReview);
