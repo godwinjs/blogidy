@@ -6,17 +6,19 @@ import { fetchBlog } from '../../actions';
 
 const BlogShow = ({ id }) => {
   const dispatch = useDispatch();
-  const blog = useSelector((state) => state);
+  const blog = useSelector((state) => state.blogs[id]);
+
+  console.log(id, blog)
 
   React.useEffect(() => {
-    dispatch(fetchBlog(id));
+    // if(!blog.id) dispatch(fetchBlog(id));
   }, [dispatch, id])
 
-  if (!this.props.blog) {
+  if (!blog) {
     return '';
   }
 
-  const { title, content } = this.props.blog;
+  const { title, content } = blog;
 
   return (
     <div>
