@@ -18,20 +18,21 @@ module.exports = app => {
     const redis = require('redis')
     const redisUrl = 'redis://127.0.0.1:6379'
     const client = redis.createClient(redisUrl)
+    client.connect()
 
     // mongo
     const blogs = await Blog.find({ _user: req.user.id });
     // redis: get cached data that exist in the redisDB for this query [req.user.id]
-    const cachedBlogs = redis.get(req.user.id)
+    const cachedBlogs = await client.get(req.user.id)
 
     // if cashed data exists, res to this req with the cached data
     if(cachedBlogs) {
-      console.log('serving from cache')
+      console.log('serving ' + req.user.id +' from cache')
       return res.send(JSON.parse(cachedBlogs))
     }
 
     // if not, respond to the request with the data from mongoDB and update/cache the data for the query in redisDB
-      console.log('serving from mongoDB')
+    console.log('serving from mongoDB')
     res.send(blogs);
     client.set(req.user.id, JSON.stringify(blogs))
   });
@@ -47,7 +48,7 @@ module.exports = app => {
 
     try {
       await blog.save();
-      res.send(blog);
+
     } catch (err) {
       res.send(400, err);
     }
