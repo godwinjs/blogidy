@@ -4,32 +4,37 @@ import React from 'react';
 import { reduxForm } from 'redux-form';
 import BlogForm from './BlogForm';
 import BlogFormReview from './BlogFormReview';
+import { useSelector } from 'react-redux';
+
 
 const BlogNew = (props) => {
-  const [ showFormReview, setShowFormReview ] = React.useState(false);
-  console.log("BlogNew", props)
+  const { showFormReview } = useSelector((state) => state.appState)
+  const { formReview } = useSelector((state) => state.form)
 
-  const renderContent = () => {
-    if (showFormReview) {
+  React.useEffect(() => {
+    let d = renderContent(showFormReview)
+  }, [props])
+
+  const renderContent = (show) => {
+    if ( show ) {
       return (
-        <BlogFormReview
-          props={{...props, onCancel: setShowFormReview(false)}}
+        <BlogFormReview formReview={formReview}
         />
       );
     }
 
     return (
       <BlogForm
-      props={{...props, onCancel: setShowFormReview(false)}}
       />
     );
   }
 
   return (
     <div>
-      {renderContent()}
+      {renderContent(showFormReview)}
     </div>
   );
 }
 
 export default reduxForm({ form: 'blogForm'})(BlogNew);
+// export default BlogNew;
