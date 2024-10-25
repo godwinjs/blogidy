@@ -36,11 +36,13 @@ server.prepare().then(() => {
     //     })
     //     );
     // Configure the session middleware
+    let TimeMs = Math.round(Date.now());
+
     app.use(session({
-        secret: 'yourSecretKey',  // You should use an environment variable for security
+        secret: keys.cookieKey,  // You should use an environment variable for security
         resave: false,            // Don't save session if unmodified
         saveUninitialized: true,  // Save uninitialized sessions (for login)
-        cookie: { secure: false } // Set to true in production when using HTTPS
+        cookie: { secure: false, maxAge:  (30 * 24 * 60 * 60 * 1000) + TimeMs } // Set to true in production when using HTTPS
     }));
     // 
     app.use(passport.initialize());
