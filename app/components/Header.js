@@ -3,13 +3,24 @@
 import React from 'react';
 import Link from 'next/link';
 
-import { useSelector, useDispatch } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
+import { fetchUser } from '../actions';
 
 const Header = () => {
   const auth = useSelector((state) => state.auth) //state: { auth: null, form: {}, blogs: {}}
-  console.log("Header>auth", auth)
+  const dispatch = useDispatch()
+
+  console.log({auth})
+
+
+  React.useEffect(() => {
+    if(auth === null){
+      dispatch(fetchUser())
+    }
+  }, [ auth, dispatch])
 
   const renderContent = () => {
+
     switch (auth) {
       case null:
         return;
