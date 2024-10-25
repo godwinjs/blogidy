@@ -30,9 +30,14 @@ export const setShowFormReview = (bool) => dispatch => {
 };
 
 export const fetchBlogs = () => async dispatch => {
-  const res = await axios.get('/api/blogs');
 
-  dispatch({ type: FETCH_BLOGS, payload: res.data });
+  try {
+    const res = await axios.get('/api/blogs');
+    dispatch({ type: FETCH_BLOGS, payload: res.data });
+  } catch (err) {
+    console.log(err)
+  }
+
 };
 
 export const fetchBlog = id => async dispatch => {
