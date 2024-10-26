@@ -6,7 +6,8 @@
     "dev": "nodemon server.js",
     "build": "next build",
     "start": "NODE_ENV=production node server.js",
-    "lint": "next lint"
+    "lint": "next lint",
+    "test": "jest --passWithNoTests"
   },
   "dependencies": {
     "aws-sdk": "^2.1691.0",
