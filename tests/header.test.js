@@ -17,12 +17,11 @@ test("We can luanch a browser", async () => {
     const logoText = await page.locator('a.brand-logo').waitHandle();
     
     const text = await logoText?.evaluate((el) => {
-        console.log(el)
+        console.log(el.textContent)
         return el.textContent
     })
     
-    expect(logoText).toEqual("Blogidy")
-    console.log(text)
+    expect(text).toEqual("Blogidy")
 
     // browser.close()
-})
+}, 20000)
