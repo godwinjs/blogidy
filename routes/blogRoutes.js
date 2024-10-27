@@ -19,7 +19,7 @@ module.exports = app => {
 
   app.get('/api/blogs', requireLogin, async (req, res) => {
 
-    req.user = { id: "6713527cfba9cb302476345d"}
+    // req.user = { id: "6713527cfba9cb302476345d"}
 
     // mongo
     const blogs = await Blog.find({ _user: req.user.id }).cache({key: req.user.id});
@@ -30,7 +30,7 @@ module.exports = app => {
   app.post('/api/blog', requireLogin, cleanCache, async (req, res) => {
     const { title, content } = req.body;
     
-    req.user = { id: "6713527cfba9cb302476345d"}
+    // req.user = { id: "6713527cfba9cb302476345d"}
 
     const blog = new Blog({
       title,
