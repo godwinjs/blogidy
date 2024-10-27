@@ -11,7 +11,7 @@ import { formFields } from './formFields';
 import { useDispatch } from 'react-redux';
 import { setShowFormReview } from '@/app/actions';
 
-const BlogForm = (props) =>  {
+const BlogForm = React.memo( function BlogForm(props) {
   const dispatch = useDispatch();
 
   React.useEffect(() => {
@@ -56,7 +56,7 @@ const BlogForm = (props) =>  {
       </form>
     </div>
   );
-}
+})
 
 function validate(values) {
   const errors = {};
