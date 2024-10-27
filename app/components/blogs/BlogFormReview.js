@@ -12,7 +12,7 @@ import { useRouter } from 'next/navigation';
 import { useDispatch } from 'react-redux';
 import { setShowFormReview } from '@/app/actions';
 
-const BlogFormReview = (props) => {
+const BlogFormReview = React.memo( function BlogFormReview(props) {
   const formValues = useSelector((state) => state.form)
   const router = useRouter();
   const dispatch = useDispatch();
@@ -65,7 +65,7 @@ const BlogFormReview = (props) => {
       {renderButtons()}
     </form>
   );
-}
+})
 
 export default BlogFormReview;
 // export default reduxForm({ form: 'blogForm'})(BlogFormReview);
