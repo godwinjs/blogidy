@@ -41,8 +41,8 @@ test('clicking login starts the google 0auth flow', async () => {
 
 }, 15000)
 
-test('After google 0auth flow user gets logged in', async () => {
-    
+test('When signed in, show logout button.', async () => {
+
 
 }, 15000)
 
