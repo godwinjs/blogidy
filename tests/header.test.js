@@ -27,7 +27,7 @@ test("The Logo has the correct text", async () => {
     
     expect(text).toEqual("Blogidy")
 
-}, 20000)
+}, 15000)
 
 test('clicking login starts the google 0auth flow', async () => {
 
@@ -37,9 +37,14 @@ test('clicking login starts the google 0auth flow', async () => {
     
     await page.click('.right a')
 
-    console.log(page.url())
+    expect(page.url()).toMatch(/accounts\.google\.com/)
 
-}, 20000)
+}, 15000)
+
+test('After google 0auth flow user gets logged in', async () => {
+    
+
+}, 15000)
 
 // 
 // 
