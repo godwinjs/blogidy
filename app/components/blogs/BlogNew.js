@@ -7,13 +7,15 @@ import BlogFormReview from './BlogFormReview';
 import { useSelector } from 'react-redux';
 
 
-const BlogNew = (props) => {
+const BlogNew = React.memo(function BlogNew(props) {
   const { showFormReview } = useSelector((state) => state.appState)
   const { formReview } = useSelector((state) => state.form)
 
-  React.useEffect(() => {
-    let d = renderContent(showFormReview)
-  }, [props])
+  // React.useEffect(() => {
+  //   let d = renderContent(showFormReview)
+  // }, [props])
+  
+  React.useMemo(() => {props, formReview}, [props, formReview])
 
   const renderContent = (show) => {
     if ( show ) {
@@ -34,7 +36,7 @@ const BlogNew = (props) => {
       {renderContent(showFormReview)}
     </div>
   );
-}
+})
 
 export default reduxForm({ form: 'blogForm'})(BlogNew);
 // export default BlogNew;
