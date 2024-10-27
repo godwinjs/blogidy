@@ -39,19 +39,6 @@ test('clicking login starts the google 0auth flow', async () => {
 
     console.log(page.url())
 
-    // await loginButton.click()
-    // const clicked = await loginButton?.$(async function(el){
-    //     console.log(this)
-    //     await el.click();
-    //     return true
-    // })
-
-    // if(clicked === true){
-    //     let url = page.url();
-    //     console.log(url)
-    // }
-
-    // console.log(clicked)
 }, 20000)
 
 // 
