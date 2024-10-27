@@ -18,6 +18,7 @@ module.exports = app => {
   });
 
   app.get('/api/blogs', requireLogin, async (req, res) => {
+    console.log("SESSION",req.session)
 
     // req.user = { id: "6713527cfba9cb302476345d"}
 
