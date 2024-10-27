@@ -4,12 +4,14 @@ const next = require('next');
 const mongoose = require('mongoose');
 const cookieSession = require('cookie-session');
 const session = require('express-session');
+const { v4: uuidv4 } = require('uuid');
 //
 require('dotenv').config();
 //
 const passport = require('passport');
 const bodyParser = require('body-parser');
 const keys = require('./config/keys');
+const { uniqueId } = require('lodash');
 
 require('./models/User');
 require('./models/Blog');
@@ -38,8 +40,12 @@ server.prepare().then(() => {
     //     );
     // Configure the session middleware
     let TimeMs = Math.round(Date.now());
+    console.log(TimeMs, " " ,(30 * 24 * 60 * 60 * 1000)  )
 
     app.use(session({
+        genid: function(req) {
+            return uuidv4()
+        },
         secret: keys.cookieKey,  // You should use an environment variable for security
         resave: false,            // Don't save session if unmodified
         saveUninitialized: true,  // Save uninitialized sessions (for login)
