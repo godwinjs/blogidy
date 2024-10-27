@@ -43,9 +43,9 @@ server.prepare().then(() => {
     console.log(TimeMs, " " ,(30 * 24 * 60 * 60 * 1000)  )
 
     app.use(session({
-        genid: function(req) {
-            return uuidv4()
-        },
+        // genid: function(req) {
+        //     return uuidv4()
+        // },
         secret: keys.cookieKey,  // You should use an environment variable for security
         resave: false,            // Don't save session if unmodified
         saveUninitialized: true,  // Save uninitialized sessions (for login)
