@@ -41,3 +41,4 @@ afterEach(async () => {
 })
 
 // https://pptr.dev/guides/page-interactions
+// https://jestjs.io/docs/api#testname-fn-timeout
