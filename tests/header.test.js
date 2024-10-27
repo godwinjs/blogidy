@@ -1,27 +1,43 @@
 const puppeteer = require('puppeteer')
 
-test("adds two numbers", () => {
-    let sum = 1 + 2;
+let browser, page;
 
-    expect(sum).toEqual(3);
-});
-
-test("We can luanch a browser", async () => {
-    const browser = await puppeteer.launch({
-        headless: false
+beforeEach( async () => {    
+    
+    browser = await puppeteer.launch({
+        headless: true
     });
 
-    const page = await browser.newPage();
+    page = await browser.newPage();
     page.goto('http://localhost:3000')
+
+})
+// 
+// 
+// 
+
+test("The Logo has the correct text", async () => {
 
     const logoText = await page.locator('a.brand-logo').waitHandle();
     
     const text = await logoText?.evaluate((el) => {
-        console.log(el.textContent)
         return el.textContent
     })
     
     expect(text).toEqual("Blogidy")
 
-    // browser.close()
 }, 20000)
+
+test('clicking login starts the google 0auth flow', async () => {
+
+})
+
+// 
+// 
+//
+afterEach(async () => {
+
+    // await browser.close()
+})
+
+// https://pptr.dev/guides/page-interactions
