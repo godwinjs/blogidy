@@ -2,16 +2,17 @@ const puppeteer = require('puppeteer')
 
 let browser, page;
 
-beforeEach( async () => {    
+beforeAll( async () => {    
     
     browser = await puppeteer.launch({
-        headless: true
+        headless: false
     });
 
     page = await browser.newPage();
     page.goto('http://localhost:3000')
+    await page.waitForNavigation()
 
-})
+}, 10000)
 // 
 // 
 // 
@@ -30,14 +31,35 @@ test("The Logo has the correct text", async () => {
 
 test('clicking login starts the google 0auth flow', async () => {
 
-})
+    // const loginButton = await page.locator('.right a').waitHandle();
+    // await loginButton.click();
+    
+    
+    await page.click('.right a')
+
+    console.log(page.url())
+
+    // await loginButton.click()
+    // const clicked = await loginButton?.$(async function(el){
+    //     console.log(this)
+    //     await el.click();
+    //     return true
+    // })
+
+    // if(clicked === true){
+    //     let url = page.url();
+    //     console.log(url)
+    // }
+
+    // console.log(clicked)
+}, 20000)
 
 // 
 // 
 //
-afterEach(async () => {
+afterAll(async () => {
 
-    // await browser.close()
+    await browser.close()
 })
 
 // https://pptr.dev/guides/page-interactions
