@@ -12,7 +12,7 @@ const namespace = uuidv4().toString();
 
 // console.log(uuidv5('cGFzc3BvcnQ6IHsgdXNlcjogJzY3MTM1MjdjZmJhOWNiMzAyNDc2MzQ1ZCcgfQ', namespace ))
 
-const token = Buffer.from(JSON.stringify({passport: { user: '6713527cfba9cb302476345d' }})).toString('base64')
+const token = Buffer.from('6713527cfba9cb302476345d').toString('base64')
 console.log(token)
 
 //
