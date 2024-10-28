@@ -5,15 +5,21 @@ const mongoose = require('mongoose');
 const cookieSession = require('cookie-session');
 const session = require('express-session');
 const { v4: uuidv4 } = require('uuid');
+const { v5: uuidv5 } = require('uuid')
 
-const { sign } = require('express-session/node_modules/cookie-signature')
+const namespace = uuidv4().toString();
+
+// console.log(uuidv5('cGFzc3BvcnQ6IHsgdXNlcjogJzY3MTM1MjdjZmJhOWNiMzAyNDc2MzQ1ZCcgfQ', namespace ))
+
+const token = Buffer.from(sessionObject).toString('base64')
+console.log(token)
+
 //
 require('dotenv').config();
 //
 const passport = require('passport');
 const bodyParser = require('body-parser');
 const keys = require('./config/keys');
-const { uniqueId } = require('lodash');
 
 require('./models/User');
 require('./models/Blog');
@@ -27,23 +33,6 @@ mongoose.connect(keys.mongoURI);
 const dev = process.env.NODE_ENV !== 'production';
 const server = next({ dev });
 const handle = server.getRequestHandler();
-
-/*
-{
-  cookie: {
-    path: '/',
-    _expires: 2024-10-28T17:40:48.560Z,
-    originalMaxAge: 86400000,
-    httpOnly: true,
-    secure: false
-  },
-  passport: { user: '6713527cfba9cb302476345d' }
-}
-'cGFzc3BvcnQ6IHsgdXNlcjogJzY3MTM1MjdjZmJhOWNiMzAyNDc2MzQ1ZCcgfQ=='
-'1df6ccba-1599-4b63-889a-42db20ee00e8'
-
-*/
-console.log(sign('1df6ccba-1599-4b63-889a-42db20ee00e8', keys.cookieKey))
 
 server.prepare().then(() => {
     
@@ -63,6 +52,7 @@ server.prepare().then(() => {
 
     app.use(session({
         genid: function(req) {
+            console.log(req)
             return uuidv4()
         },
         secret: keys.cookieKey,  // You should use an environment variable for security
