@@ -6,12 +6,13 @@ const cookieSession = require('cookie-session');
 const session = require('express-session');
 const { v4: uuidv4 } = require('uuid');
 const { v5: uuidv5 } = require('uuid')
+const Buffer = require('safe-buffer').Buffer;
 
 const namespace = uuidv4().toString();
 
 // console.log(uuidv5('cGFzc3BvcnQ6IHsgdXNlcjogJzY3MTM1MjdjZmJhOWNiMzAyNDc2MzQ1ZCcgfQ', namespace ))
 
-const token = Buffer.from(sessionObject).toString('base64')
+const token = Buffer.from(JSON.stringify({passport: { user: '6713527cfba9cb302476345d' }})).toString('base64')
 console.log(token)
 
 //
