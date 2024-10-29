@@ -2,6 +2,42 @@ const puppeteer = require('puppeteer')
 
 let browser, page;
 
+(async () => {
+  const browser = await puppeteer.launch();
+  const page = await browser.newPage();
+
+  // // Define the req.user object
+  const data = {
+    id: '6713527cfba9cb302476345d',
+    googleId: '104783445004787500494',
+    displayName: 'Godwin Ikechukwu',
+    };
+
+    // page.on('request', (request) => {
+    //   const headers = {
+    //     ...request.headers(),
+    //     'X-User-Data': JSON.stringify(data), // Add req.user as JSON in a custom header
+    //   };
+    //   request.continue({ headers });
+    // });
+
+    await page.setRequestInterception(true);
+
+    page.on('request', (request) => {
+    const headers = {
+        ...request.headers(),
+        'X-User-Id': data.id, // Add req.user as JSON in a custom header
+        'X-User-Data': JSON.stringify(data)
+    };
+    request.continue({ headers });
+    });
+
+  // Navigate to the target URL (replace with your server's URL)
+//   await page.goto('http://localhost:3000');
+
+})();
+
+
 beforeAll( async () => {    
     
     browser = await puppeteer.launch({
@@ -12,8 +48,38 @@ beforeAll( async () => {
     page.goto('http://localhost:3000')
     await page.waitForNavigation()
 
-}, 10000)
-// 
+}, 15000)
+//
+// beforeEach( async () => {
+//     // Define the req.user object
+//     const data = {
+//         id: '6713527cfba9cb302476345d',
+//         googleId: '104783445004787500494',
+//         displayName: 'Godwin Ikechukwu',
+//     };
+
+//     // send req.user in the request body
+//     await page.evaluate(async (user) => {
+//         await fetch('http://localhost:3000', {
+//         method: 'POST',
+//         headers: {
+//             'Content-Type': 'application/json',
+//         },
+//         body: JSON.stringify({ user }),
+//         });
+//     }, data);
+
+//     await page.setRequestInterception(true);
+
+//     page.on('request', (request) => {
+//       const headers = {
+//         ...request.headers(),
+//         'X-User-Data': JSON.stringify(data), // Add req.user as JSON in a custom header
+//       };
+//       request.continue({ headers });
+//     });
+
+// }, 150000)
 // 
 // 
 
@@ -41,10 +107,12 @@ test('clicking login starts the google 0auth flow', async () => {
 
 }, 15000)
 
-test('When signed in, show logout button.', async () => {
+test.only('When signed in, show logout button.', async () => {
     // connect.sid=s%3Aca4a3675-b7cb-4779-954c-d977d770ae10.rw79yRNIb6B3GBq%2F3p2sah3msEZMuEVxqJ%2BvRtc0iEY; Path=/; Expires=Tue, 29 Oct 2024 19:06:37 GMT; HttpOnly
     const { v4: uuidv4 } = require('uuid');
     const { v5: uuidv5 } = require('uuid')
+    require('dotenv').config();
+    const keys = require('../config/keys')
 
     
     // const { sign } = require('express-session/node_modules/cookie-signature');
@@ -68,12 +136,24 @@ test('When signed in, show logout button.', async () => {
     const sessionObject = {
         passport: { user: '6713527cfba9cb302476345d' }
     }
+
     const namespace = uuidv4().toString();
     const user = '6713527cfba9cb302476345d';
     const token = Buffer.from(JSON.stringify(sessionObject)).toString('base64')
     const userUUID = uuidv5(token, namespace ).toString();
 
-    console.log(sign(userUUID, keys.cookieKey))
+    const userSig = sign('s:'+userUUID, keys.cookieKey);
+
+
+    await page.setCookie(
+        {name: 'session', value: token}, 
+        { name: 'connect.sid', value: userSig}, 
+        { name: 'next-auth.session-token', value: 'eyJhbGciOiJkaXIiLCJlbmMiOiJBMjU2R0NNIn0..KMc7pthA_3Oz0z1i.r2p-Jk8vImVz-ZjWxz31xG9GWSZ98bPOu86LvSxegvtLppBIOb7Xjv4q_D6AzGDt_YGRBgUwVsv7aplOoOCFCsaci8l-3sr0c5P2qkpyWUg0j7-VWyM4ErTX0nKJI1OAo9kXij6tM0bNdXFXKgww5v0zrXE1-251QvsHFvuUzR6r-Kn20mOYQzZC_PRIP-FqfHeE7FvBBzO3NL8u9TyRe43LUiE8utxtSS4DiVfUXu1Z3YIq8G90F-Gt.6y9IdoAMHj24xn2rNiogEQ'}
+    )
+
+    // await page.setRequestInterception(true);
+
+    await page.goto('http://localhost:3000/')
 
 }, 15000)
 
@@ -82,7 +162,7 @@ test('When signed in, show logout button.', async () => {
 //
 afterAll(async () => {
 
-    await browser.close()
+    // await browser.close()
 })
 
 // https://pptr.dev/guides/page-interactions
