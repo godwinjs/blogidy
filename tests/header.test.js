@@ -10,13 +10,13 @@ let browser, page, user, data;
         // Define the req.user object
         id: user.id
     }
-})
+})()
 
 
 beforeAll( async () => {    
     
     browser = await puppeteer.launch({
-        headless: true
+        headless: false
     });
 
     page = await browser.newPage();
@@ -26,7 +26,7 @@ beforeAll( async () => {
     page.on('request', (request) => {
     const headers = {
         ...request.headers(),
-        'X-User-Id': data.id, // Add req.user as JSON in a custom header
+        'X-User-Id': data?.id, // Add req.user as JSON in a custom header
         'X-User-Data': JSON.stringify(data)
     };
     request.continue({ headers });
@@ -64,7 +64,7 @@ test('clicking login starts the google 0auth flow', async () => {
 }, 15000)
 
 test.only('When signed in, show logout button.', async () => {
-    let user = await userFactory()
+    // user = await userFactory()
     const { session, signature } = sessionFactory(user)
 
     await page.setCookie(
@@ -75,7 +75,7 @@ test.only('When signed in, show logout button.', async () => {
     await page.reload()
 
     const logOutButton = await page.$('a[href="/auth/logout"]')
-    expect(await logOutButton.evaluate(node => node.innerText)).toBe('Logout')
+    expect(await logOutButton?.evaluate(node => node.innerText)).toEqual('Logout')
 
 }, 15000)
 
@@ -84,7 +84,7 @@ test.only('When signed in, show logout button.', async () => {
 //
 afterAll(async () => {
 
-    await browser.close()
+    // await browser.close()
 })
 
 // https://pptr.dev/guides/page-interactions
