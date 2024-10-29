@@ -76,14 +76,13 @@ server.prepare().then(() => {
             //     secure: false
             //     }
             // }
-            console.log('req.session', req.session, 'req.sessionID', req.sessionID)
-            console.log("req.user",req.user?.id, "||", req.headers['x-user-id'] )
+            // console.log("req.user",req.user?.id, "||", req.headers['x-user-data'] )
 
-            
-            const userID = req.user?.id || req.headers['x-user-id'] || req.sessionID;
+            const userID = req.user?.id || req.headers['x-User-id'] || req.sessionID;
             const sessionObject = {
                 passport: { user: userID }
             }
+            console.log(userID, "userID", req.headers['x-user-id'], "x-user-id00", req, "req.sessionID")
             const namespace = uuidv4().toString();
             const token = Buffer.from(JSON.stringify(sessionObject)).toString('base64');
             const userUUID = uuidv5(token, namespace );
