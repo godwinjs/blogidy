@@ -20,7 +20,7 @@ require('./models/Blog');
 require('./services/passport');
 require('./services/cache')
 
-mongoose.Promise = global.Promise;
+mongoose.Promise = global.Promise; // what implementation of promise should mongoose use
 mongoose.connect(keys.mongoURI);
 
 // Check if the app is in development mode
