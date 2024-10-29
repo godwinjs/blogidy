@@ -1,6 +1,6 @@
-const puppeteer = require('puppeteer')
 const sessionFactory = require('./factories/sessionFactory');
 const userFactory = require('./factories/userFactory')
+const Page = require('./helpers/page')
 
 let browser, page, user, data;
 
@@ -15,11 +15,14 @@ let browser, page, user, data;
 
 beforeAll( async () => {    
     
-    browser = await puppeteer.launch({
-        headless: false
-    });
+    // browser = await puppeteer.launch({
+    //     headless: false
+    // });
 
-    page = await browser.newPage();
+    // page = await browser.newPage();
+    page = await Page.build(null, { headless: false })
+
+    // page = buildPageFactory( null, { headless: false })
 
     await page.setRequestInterception(true);
 
@@ -38,6 +41,17 @@ beforeAll( async () => {
 }, 20000)
 //
 // 
+test('clicking login starts the google 0auth flow', async () => {
+
+    // const loginButton = await page.locator('.right a').waitHandle();
+    // await loginButton.click();
+    
+    
+    await page.click('.right a')
+
+    expect(page.url()).toMatch(/accounts\.google\.com/)
+
+}, 15000)
 
 test("The Logo has the correct text", async () => {
 
@@ -48,18 +62,6 @@ test("The Logo has the correct text", async () => {
     })
     
     expect(text).toEqual("Blogidy")
-
-}, 15000)
-
-test('clicking login starts the google 0auth flow', async () => {
-
-    // const loginButton = await page.locator('.right a').waitHandle();
-    // await loginButton.click();
-    
-    
-    await page.click('.right a')
-
-    expect(page.url()).toMatch(/accounts\.google\.com/)
 
 }, 15000)
 
@@ -84,7 +86,7 @@ test('When signed in, show logout button.', async () => {
 //
 afterAll(async () => {
 
-    await browser.close()
+    // await browser.close()
 })
 
 // https://pptr.dev/guides/page-interactions
