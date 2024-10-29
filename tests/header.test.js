@@ -1,4 +1,5 @@
 const puppeteer = require('puppeteer')
+const sessionFactory = require('./factories/sessionFactory')
 
 let browser, page;
 // Define the req.user object
@@ -60,32 +61,12 @@ test('clicking login starts the google 0auth flow', async () => {
 }, 15000)
 
 test.only('When signed in, show logout button.', async () => {
-    // connect.sid=s%3Aca4a3675-b7cb-4779-954c-d977d770ae10.rw79yRNIb6B3GBq%2F3p2sah3msEZMuEVxqJ%2BvRtc0iEY; Path=/; Expires=Tue, 29 Oct 2024 19:06:37 GMT; HttpOnly
-    const { v4: uuidv4 } = require('uuid');
-    const { v5: uuidv5 } = require('uuid')
-    require('dotenv').config();
-    const keys = require('../config/keys')
-
-    const { sign } = require('../node_modules/cookie-signature')
-    const Buffer = require('safe-buffer').Buffer;
-
-    const sessionObject = {
-        passport: { user: '6713527cfba9cb302476345d' }
-    }
-
-    const namespace = uuidv4().toString();
-    const token = Buffer.from(JSON.stringify(sessionObject)).toString('base64')
-    const userUUID = uuidv5(token, namespace ).toString();
-
-    const userSig = sign('s:'+userUUID, keys.cookieKey);
-
+    const { session, signature } = sessionFactory('user model')
 
     await page.setCookie(
-        {name: 'session', value: token}, // incase sessionCookie is used as session manager
-        { name: 'connect.sid', value: userSig} // for expressCookie
+        {name: 'session', value: session}, // incase sessionCookie is used as session manager
+        { name: 'connect.sid', value: signature} // for expressCookie
     )
-
-    // await page.setRequestInterception(true);
 
     await page.reload()
 
