@@ -7,10 +7,10 @@ const keys = require('../../config/keys')
 const { sign } = require('../../node_modules/cookie-signature')
 const Buffer = require('safe-buffer').Buffer;
 
-module.exports = (id) => {
+module.exports = (user) => {
 
     const sessionObject = {
-        passport: { user: id }
+        passport: { user: user.id }
     }
 
     const namespace = uuidv4().toString();
