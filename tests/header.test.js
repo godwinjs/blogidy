@@ -42,6 +42,7 @@ test('clicking login starts the google 0auth flow', async () => {
 }, 15000)
 
 test('When signed in, show logout button.', async () => {
+    // connect.sid=s%3Aca4a3675-b7cb-4779-954c-d977d770ae10.rw79yRNIb6B3GBq%2F3p2sah3msEZMuEVxqJ%2BvRtc0iEY; Path=/; Expires=Tue, 29 Oct 2024 19:06:37 GMT; HttpOnly
     const { v4: uuidv4 } = require('uuid');
     const { v5: uuidv5 } = require('uuid')
 
@@ -70,9 +71,9 @@ test('When signed in, show logout button.', async () => {
     const namespace = uuidv4().toString();
     const user = '6713527cfba9cb302476345d';
     const token = Buffer.from(JSON.stringify(sessionObject)).toString('base64')
-    const userSig = uuidv5(token, namespace ).toString();
+    const userUUID = uuidv5(token, namespace ).toString();
 
-    console.log(sign(userSig, keys.cookieKey))
+    console.log(sign(userUUID, keys.cookieKey))
 
 }, 15000)
 
