@@ -13,14 +13,14 @@ let browser, page, user, data;
 })()
 
 
-beforeAll( async () => {    
+beforeEach( async () => {    
     
     // browser = await puppeteer.launch({
     //     headless: false
     // });
 
     // page = await browser.newPage();
-    page = await Page.build(null, { headless: false })
+    page = await Page.build(null, { headless: true })
 
     // page = buildPageFactory( null, { headless: false })
 
@@ -53,18 +53,6 @@ test('clicking login starts the google 0auth flow', async () => {
 
 }, 15000)
 
-test("The Logo has the correct text", async () => {
-
-    const logoText = await page.locator('a.brand-logo').waitHandle();
-    
-    const text = await logoText?.evaluate((el) => {
-        return el.textContent
-    })
-    
-    expect(text).toEqual("Blogidy")
-
-}, 15000)
-
 test('When signed in, show logout button.', async () => {
     // user = await userFactory()
     const { session, signature } = sessionFactory(user)
@@ -81,12 +69,26 @@ test('When signed in, show logout button.', async () => {
 
 }, 15000)
 
+test("The Logo has the correct text", async () => {
+    // await page.deleteCookie({name:'session'}, {name: 'connect.sid'});
+    // await page.reload();
+
+    const logoText = await page.locator('a.brand-logo').waitHandle();
+    
+    const text = await logoText?.evaluate((el) => {
+        return el.textContent
+    })
+    
+    expect(text).toEqual("Blogidy")
+
+}, 15000)
+
 // 
 // 
 //
-afterAll(async () => {
+afterEach(async () => {
 
-    // await browser.close()
+    await browser.close()
 })
 
 // https://pptr.dev/guides/page-interactions
