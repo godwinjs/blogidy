@@ -5,27 +5,8 @@ const mongoose = require('mongoose');
 const cookieSession = require('cookie-session');
 const session = require('express-session');
 const { v4: uuidv4 } = require('uuid');
-const { v5: uuidv5 } = require('uuid')
-
-    
-// const { sign } = require('express-session/node_modules/cookie-signature');
-const { sign } = require('./node_modules/cookie-signature')
+const { v5: uuidv5 } = require('uuid');
 const Buffer = require('safe-buffer').Buffer;
-/*
-{
-cookie: {
-    path: '/',
-    _expires: 2024-10-28T17:40:48.560Z,
-    originalMaxAge: 86400000,
-    httpOnly: true,
-    secure: false
-},
-passport: { user: '6713527cfba9cb302476345d' }
-}
-'cGFzc3BvcnQ6IHsgdXNlcjogJzY3MTM1MjdjZmJhOWNiMzAyNDc2MzQ1ZCcgfQ=='
-'1df6ccba-1599-4b63-889a-42db20ee00e8'
-
-*/
 
 //
 require('dotenv').config();
@@ -52,37 +33,15 @@ server.prepare().then(() => {
     const app = express();
 
     app.use(bodyParser.json());
-    // app.use(
-    //     cookieSession({
-    //         name: 'session',
-    //         maxAge: 30 * 24 * 60 * 60 * 1000,
-    //         keys: [keys.cookieKey]
-    //     })
-    //     );
-    // Configure the session middleware
-    // let TimeMs = Math.round(Date.now());
-    // console.log(TimeMs, " " ,(30 * 24 * 60 * 60 * 1000)  )
 
     app.use(session({
         genid: function(req) {
-            // sessionID: '1670c573-a189-4501-b6a8-0e9b5c629feb',
-            // sessionID: '9bceeca7-a15a-4092-ad38-b3d6880005f7', //after login
-            // session: Session {
-            //     cookie: {
-            //     path: '/',
-            //     _expires: 2024-10-29T19:06:35.911Z,
-            //     originalMaxAge: 86400000,
-            //     httpOnly: true,
-            //     secure: false
-            //     }
-            // }
-            // console.log("req.user",req.user?.id, "||", req.headers['x-user-data'] )
 
             const userID = req.user?.id || req.headers['x-User-id'] || req.sessionID;
             const sessionObject = {
                 passport: { user: userID }
             }
-            console.log(userID, "userID", req.headers['x-user-id'], "x-user-id00", req, "req.sessionID")
+
             const namespace = uuidv4().toString();
             const token = Buffer.from(JSON.stringify(sessionObject)).toString('base64');
             const userUUID = uuidv5(token, namespace );
