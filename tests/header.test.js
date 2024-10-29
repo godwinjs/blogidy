@@ -1,25 +1,21 @@
 const puppeteer = require('puppeteer')
 
 let browser, page;
-
-(async () => {
-  const browser = await puppeteer.launch();
-  const page = await browser.newPage();
-
-  // // Define the req.user object
-  const data = {
+// Define the req.user object
+const data = {
     id: '6713527cfba9cb302476345d',
     googleId: '104783445004787500494',
     displayName: 'Godwin Ikechukwu',
-    };
+};
 
-    // page.on('request', (request) => {
-    //   const headers = {
-    //     ...request.headers(),
-    //     'X-User-Data': JSON.stringify(data), // Add req.user as JSON in a custom header
-    //   };
-    //   request.continue({ headers });
-    // });
+
+beforeAll( async () => {    
+    
+    browser = await puppeteer.launch({
+        headless: true
+    });
+
+    page = await browser.newPage();
 
     await page.setRequestInterception(true);
 
@@ -32,55 +28,11 @@ let browser, page;
     request.continue({ headers });
     });
 
-  // Navigate to the target URL (replace with your server's URL)
-//   await page.goto('http://localhost:3000');
-
-})();
-
-
-beforeAll( async () => {    
-    
-    browser = await puppeteer.launch({
-        headless: false
-    });
-
-    page = await browser.newPage();
     page.goto('http://localhost:3000')
     await page.waitForNavigation()
 
-}, 15000)
+}, 20000)
 //
-// beforeEach( async () => {
-//     // Define the req.user object
-//     const data = {
-//         id: '6713527cfba9cb302476345d',
-//         googleId: '104783445004787500494',
-//         displayName: 'Godwin Ikechukwu',
-//     };
-
-//     // send req.user in the request body
-//     await page.evaluate(async (user) => {
-//         await fetch('http://localhost:3000', {
-//         method: 'POST',
-//         headers: {
-//             'Content-Type': 'application/json',
-//         },
-//         body: JSON.stringify({ user }),
-//         });
-//     }, data);
-
-//     await page.setRequestInterception(true);
-
-//     page.on('request', (request) => {
-//       const headers = {
-//         ...request.headers(),
-//         'X-User-Data': JSON.stringify(data), // Add req.user as JSON in a custom header
-//       };
-//       request.continue({ headers });
-//     });
-
-// }, 150000)
-// 
 // 
 
 test("The Logo has the correct text", async () => {
@@ -114,31 +66,14 @@ test.only('When signed in, show logout button.', async () => {
     require('dotenv').config();
     const keys = require('../config/keys')
 
-    
-    // const { sign } = require('express-session/node_modules/cookie-signature');
     const { sign } = require('../node_modules/cookie-signature')
     const Buffer = require('safe-buffer').Buffer;
-    /*
-    {
-    cookie: {
-        path: '/',
-        _expires: 2024-10-28T17:40:48.560Z,
-        originalMaxAge: 86400000,
-        httpOnly: true,
-        secure: false
-    },
-    passport: { user: '6713527cfba9cb302476345d' }
-    }
-    'cGFzc3BvcnQ6IHsgdXNlcjogJzY3MTM1MjdjZmJhOWNiMzAyNDc2MzQ1ZCcgfQ=='
-    '1df6ccba-1599-4b63-889a-42db20ee00e8'
 
-    */
     const sessionObject = {
         passport: { user: '6713527cfba9cb302476345d' }
     }
 
     const namespace = uuidv4().toString();
-    const user = '6713527cfba9cb302476345d';
     const token = Buffer.from(JSON.stringify(sessionObject)).toString('base64')
     const userUUID = uuidv5(token, namespace ).toString();
 
@@ -146,14 +81,16 @@ test.only('When signed in, show logout button.', async () => {
 
 
     await page.setCookie(
-        {name: 'session', value: token}, 
-        { name: 'connect.sid', value: userSig}, 
-        { name: 'next-auth.session-token', value: 'eyJhbGciOiJkaXIiLCJlbmMiOiJBMjU2R0NNIn0..KMc7pthA_3Oz0z1i.r2p-Jk8vImVz-ZjWxz31xG9GWSZ98bPOu86LvSxegvtLppBIOb7Xjv4q_D6AzGDt_YGRBgUwVsv7aplOoOCFCsaci8l-3sr0c5P2qkpyWUg0j7-VWyM4ErTX0nKJI1OAo9kXij6tM0bNdXFXKgww5v0zrXE1-251QvsHFvuUzR6r-Kn20mOYQzZC_PRIP-FqfHeE7FvBBzO3NL8u9TyRe43LUiE8utxtSS4DiVfUXu1Z3YIq8G90F-Gt.6y9IdoAMHj24xn2rNiogEQ'}
+        {name: 'session', value: token}, // incase sessionCookie is used as session manager
+        { name: 'connect.sid', value: userSig} // for expressCookie
     )
 
     // await page.setRequestInterception(true);
 
-    await page.goto('http://localhost:3000/')
+    await page.reload()
+
+    const logOutButton = await page.$('a[href="/auth/logout"]')
+    console.log(await logOutButton.evaluate(node => node.innerText))
 
 }, 15000)
 
