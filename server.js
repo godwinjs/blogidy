@@ -6,14 +6,26 @@ const cookieSession = require('cookie-session');
 const session = require('express-session');
 const { v4: uuidv4 } = require('uuid');
 const { v5: uuidv5 } = require('uuid')
+
+    
+// const { sign } = require('express-session/node_modules/cookie-signature');
+const { sign } = require('./node_modules/cookie-signature')
 const Buffer = require('safe-buffer').Buffer;
+/*
+{
+cookie: {
+    path: '/',
+    _expires: 2024-10-28T17:40:48.560Z,
+    originalMaxAge: 86400000,
+    httpOnly: true,
+    secure: false
+},
+passport: { user: '6713527cfba9cb302476345d' }
+}
+'cGFzc3BvcnQ6IHsgdXNlcjogJzY3MTM1MjdjZmJhOWNiMzAyNDc2MzQ1ZCcgfQ=='
+'1df6ccba-1599-4b63-889a-42db20ee00e8'
 
-const namespace = uuidv4().toString();
-
-// console.log(uuidv5('cGFzc3BvcnQ6IHsgdXNlcjogJzY3MTM1MjdjZmJhOWNiMzAyNDc2MzQ1ZCcgfQ', namespace ))
-
-const token = Buffer.from('6713527cfba9cb302476345d').toString('base64')
-console.log(token)
+*/
 
 //
 require('dotenv').config();
@@ -53,8 +65,29 @@ server.prepare().then(() => {
 
     app.use(session({
         genid: function(req) {
-            console.log(req)
-            return uuidv4()
+            // sessionID: '1670c573-a189-4501-b6a8-0e9b5c629feb',
+            // sessionID: '9bceeca7-a15a-4092-ad38-b3d6880005f7', //after login
+            // session: Session {
+            //     cookie: {
+            //     path: '/',
+            //     _expires: 2024-10-29T19:06:35.911Z,
+            //     originalMaxAge: 86400000,
+            //     httpOnly: true,
+            //     secure: false
+            //     }
+            // }
+            // console.log('req.session', req.session, 'req.sessionID', req.sessionID)
+            // console.log("req.user",req.user?.id)
+
+            
+            const userID = req.user?.id || req.sessionID;
+            const sessionObject = {
+                passport: { user: userID }
+            }
+            const namespace = uuidv4().toString();
+            const token = Buffer.from(JSON.stringify(sessionObject)).toString('base64');
+            const userUUID = uuidv5(token, namespace );
+            return userUUID;
         },
         secret: keys.cookieKey,  // You should use an environment variable for security
         resave: false,            // Don't save session if unmodified
