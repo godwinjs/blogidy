@@ -63,7 +63,7 @@ test('clicking login starts the google 0auth flow', async () => {
 
 }, 15000)
 
-test.only('When signed in, show logout button.', async () => {
+test('When signed in, show logout button.', async () => {
     // user = await userFactory()
     const { session, signature } = sessionFactory(user)
 
@@ -84,7 +84,7 @@ test.only('When signed in, show logout button.', async () => {
 //
 afterAll(async () => {
 
-    // await browser.close()
+    await browser.close()
 })
 
 // https://pptr.dev/guides/page-interactions
