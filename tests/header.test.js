@@ -1,13 +1,16 @@
 const puppeteer = require('puppeteer')
-const sessionFactory = require('./factories/sessionFactory')
+const sessionFactory = require('./factories/sessionFactory');
+const userFactory = require('./factories/userFactory')
 
-let browser, page;
-// Define the req.user object
-const data = {
-    id: '6713527cfba9cb302476345d',
-    googleId: '104783445004787500494',
-    displayName: 'Godwin Ikechukwu',
-};
+let browser, page, user, data;
+
+(async () => {
+    user = await userFactory()
+    data = {
+        // Define the req.user object
+        id: user.id
+    }
+})
 
 
 beforeAll( async () => {    
@@ -61,7 +64,8 @@ test('clicking login starts the google 0auth flow', async () => {
 }, 15000)
 
 test.only('When signed in, show logout button.', async () => {
-    const { session, signature } = sessionFactory('user model')
+    let user = await userFactory()
+    const { session, signature } = sessionFactory(user)
 
     await page.setCookie(
         {name: 'session', value: session}, // incase sessionCookie is used as session manager
