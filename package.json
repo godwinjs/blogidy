@@ -3,7 +3,7 @@
   "version": "0.1.0",
   "private": true,
   "jest": {
-    "setupTestFrameworkScriptFile": "./tests/setup.js"
+    "setupFilesAfterEnv": [ "./tests/setup.js"]
   },
   "scripts": {
     "dev": "nodemon server.js",
