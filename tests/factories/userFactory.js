@@ -2,6 +2,6 @@ const mongoose = require('mongoose');
 
 const User = mongoose.model('User');
 
-module.export = () => {
+module.exports = () => {
     return new User({}).save();
 }
