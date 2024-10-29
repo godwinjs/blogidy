@@ -40,6 +40,10 @@ class CustomPage {
     login(){
         console.log("logining in...")
     }
+
+    close() {
+        this.browser.close()
+    }
 } 
 
 module.exports = CustomPage;
