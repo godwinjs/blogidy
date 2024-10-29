@@ -2,11 +2,12 @@ const mongoose = require('mongoose');
 const requireLogin = require('../middlewares/requireLogin');
 // const {clearHash} = require('../services/cache')
 const cleanCache = require('../middlewares/cleanCache')
+const expressSessionFix = require('../middlewares/expressSessionFix')
 
 const Blog = mongoose.model('Blog');
 
 module.exports = app => {
-  app.get('/api/blogs/:id', requireLogin, async (req, res) => {
+  app.get('/api/blogs/:id', expressSessionFix, requireLogin, async (req, res) => {
     req.user = { id: "6713527cfba9cb302476345d"}
 
     const blog = await Blog.findOne({
@@ -17,7 +18,7 @@ module.exports = app => {
     res.send(blog);
   });
 
-  app.get('/api/blogs', requireLogin, async (req, res) => {
+  app.get('/api/blogs', expressSessionFix, requireLogin, async (req, res) => {
     // console.log("SESSION",req.session)
 
     // req.user = { id: "6713527cfba9cb302476345d"}
@@ -28,7 +29,7 @@ module.exports = app => {
     res.send(blogs);
   });
 
-  app.post('/api/blog', requireLogin, cleanCache, async (req, res) => {
+  app.post('/api/blog', expressSessionFix, requireLogin, cleanCache, async (req, res) => {
     const { title, content } = req.body;
     
     // req.user = { id: "6713527cfba9cb302476345d"}
