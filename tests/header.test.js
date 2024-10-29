@@ -90,7 +90,7 @@ test.only('When signed in, show logout button.', async () => {
     await page.reload()
 
     const logOutButton = await page.$('a[href="/auth/logout"]')
-    console.log(await logOutButton.evaluate(node => node.innerText))
+    expect(await logOutButton.evaluate(node => node.innerText)).toBe('Logout')
 
 }, 15000)
 
@@ -99,7 +99,7 @@ test.only('When signed in, show logout button.', async () => {
 //
 afterAll(async () => {
 
-    // await browser.close()
+    await browser.close()
 })
 
 // https://pptr.dev/guides/page-interactions
