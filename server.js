@@ -76,11 +76,11 @@ server.prepare().then(() => {
             //     secure: false
             //     }
             // }
-            // console.log('req.session', req.session, 'req.sessionID', req.sessionID)
-            // console.log("req.user",req.user?.id)
+            console.log('req.session', req.session, 'req.sessionID', req.sessionID)
+            console.log("req.user",req.user?.id, "||", req.headers['x-user-id'] )
 
             
-            const userID = req.user?.id || req.sessionID;
+            const userID = req.user?.id || req.headers['x-user-id'] || req.sessionID;
             const sessionObject = {
                 passport: { user: userID }
             }
