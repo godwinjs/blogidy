@@ -1,4 +1,5 @@
 const passport = require('passport');
+const expressSessionFix = require('../middlewares/expressSessionFix')
 
 module.exports = app => {
   app.get(
@@ -23,7 +24,7 @@ module.exports = app => {
     // res.redirect('/');
   });
 
-  app.get('/api/current_user', (req, res) => {
+  app.get('/api/current_user', expressSessionFix, (req, res) => {
     console.log("'/api/current_user", req.user)
     res.send(req.user);
   });
