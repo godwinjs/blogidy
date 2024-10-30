@@ -20,31 +20,32 @@ beforeEach( async () => {
     // });
 
     // page = await browser.newPage();
-    page = await Page.build(null, { headless: true })
+    page = await Page.build(null, { headless: false })
 
     // page = buildPageFactory( null, { headless: false })
 
-    await page.setRequestInterception(true);
-
-    page.on('request', (request) => {
-    const headers = {
-        ...request.headers(),
-        'X-User-Id': data?.id, // Add req.user as JSON in a custom header
-        'X-User-Data': JSON.stringify(data)
-    };
-    request.continue({ headers });
-    });
-
-    page.goto('http://localhost:3000')
+    await page.goto('http://localhost:3000')
     await page.waitForNavigation()
+    await page.setRequestInterception(true);
 
 }, 20000)
 //
 // 
-test('clicking login starts the google 0auth flow', async () => {
+test.only('clicking login starts the google 0auth flow', async () => {
 
     // const loginButton = await page.locator('.right a').waitHandle();
     // await loginButton.click();
+    await page.deleteCookie({name:'session'}, {name: 'connect.sid'});
+    await page.reload();
+
+    page.on('request', (request) => {
+        const headers = {
+            ...request.headers(),
+            'X-User-Id': undefined, // Add req.user as JSON in a custom header
+            'X-User-Data': undefined
+        };
+        request.continue({ headers });
+    });
     
     
     await page.click('.right a')
@@ -63,6 +64,14 @@ test('When signed in, show logout button.', async () => {
     )
 
     await page.reload()
+    page.on('request', (request) => {
+        const headers = {
+            ...request.headers(),
+            'X-User-Id': data?.id, // Add req.user as JSON in a custom header
+            'X-User-Data': JSON.stringify(data)
+        };
+        request.continue({ headers });
+    });
 
     const logOutButton = await page.$('a[href="/auth/logout"]')
     expect(await logOutButton?.evaluate(node => node.innerText)).toEqual('Logout')
@@ -70,8 +79,7 @@ test('When signed in, show logout button.', async () => {
 }, 15000)
 
 test("The Logo has the correct text", async () => {
-    // await page.deleteCookie({name:'session'}, {name: 'connect.sid'});
-    // await page.reload();
+    
 
     const logoText = await page.locator('a.brand-logo').waitHandle();
     
@@ -88,7 +96,7 @@ test("The Logo has the correct text", async () => {
 //
 afterEach(async () => {
 
-    await browser.close()
+    await page.close()
 })
 
 // https://pptr.dev/guides/page-interactions
