@@ -12,7 +12,8 @@
     "build": "next build",
     "start": "NODE_ENV=production node server.js",
     "lint": "next lint",
-    "test": "jest --passWithNoTests"
+    "test": "jest --passWithNoTests",
+    "game": "node gameServer.js && nodemon"
   },
   "dependencies": {
     "aws-sdk": "^2.1691.0",
