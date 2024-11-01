@@ -1,0 +1,4 @@
+{
+"watch": ["game.js"], 
+"ignore": ["gameServer.js"]
+}
