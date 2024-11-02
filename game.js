@@ -79,7 +79,7 @@ async function clickSequence(page){
             const button = await page.$(`div[data-token="${gameSequence[i]}"]`);
             if (button) {
                 await button.click();
-                await page.evaluate(() => new Promise(resolve => setTimeout(resolve, 300)));
+                await page.evaluate(() => new Promise(resolve => setTimeout(resolve, 150)));
                 // await button.waitForSelector(`active`)
                 // await page.click(`div[data-token="${gameSequence[i]}"]`, { delay: 300, clickCount: 1})
                 console.log('cliked sequence...', gameSequence[i])
