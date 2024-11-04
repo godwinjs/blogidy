@@ -161,28 +161,28 @@ async function playGame(page, clrInt){
     });
 
     async function addEvents() {
-        
+        page.waitForSelector('div.controls') //{ timeout: 0}
+
+        const controls = await page.$$eval('div.controls', (El) => El.map(E => {
+    
+            let startBtn = E.querySelector('button#start-game');
+            let leaderboardBtn = E.querySelector('a[href="/leaderboard"]')
+            // leaderboardBtn.answer = answer
+    
+            startBtn.addEventListener('click', function (){
+                leaderboardBtn.textContent = "Answer";
+                leaderboardBtn.setAttribute('href', '#');
+    
+                console.log('listeneer > answer button and variables prepared..', window.vars)
+            })
+            // leaderboardBtn.addEventListener('click', window.answer)
+    
+            return [startBtn.textContent, leaderboardBtn.textContent]
+        }))
+        console.log('controls', controls)
     }
     
-    page.waitForSelector('div.controls', { timeout: 0})
 
-    const controls = await page.$$eval('div.controls', (El) => El.map(E => {
-
-        let startBtn = E.querySelector('button#start-game');
-        let leaderboardBtn = E.querySelector('a[href="/leaderboard"]')
-        // leaderboardBtn.answer = answer
-
-        startBtn.addEventListener('click', function (){
-            leaderboardBtn.textContent = "Answer";
-            leaderboardBtn.setAttribute('href', '#');
-
-            console.log('listeneer > answer button and variables prepared..', window.vars)
-        })
-        // leaderboardBtn.addEventListener('click', window.answer)
-
-        return [startBtn.textContent, leaderboardBtn.textContent]
-    }))
-    console.log('controls', controls)
 
     // console.log(page)
 })()
