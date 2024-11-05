@@ -161,7 +161,9 @@ async function playGame(page, clrInt){
     });
 
     async function addEvents() {
-        page.waitForSelector('div.controls') //{ timeout: 0}
+        
+    }
+    page.waitForSelector('div.controls') //{ timeout: 0}
 
         const controls = await page.$$eval('div.controls', (El) => El.map(E => {
     
@@ -180,8 +182,6 @@ async function playGame(page, clrInt){
             return [startBtn.textContent, leaderboardBtn.textContent]
         }))
         console.log('controls', controls)
-    }
-    
 
 
     // console.log(page)
