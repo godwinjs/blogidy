@@ -27,5 +27,5 @@ function longestChar(s) {
       return map
 }
     
-    const str = "aakiAKDNEKSKSKNEJDNSJKLSNKWLMAKDOWMFCLKSsassyhwywjsgagkcdj1678293"
-    console.log(longestChar(str))
+const str = "aakiAKDNEKSKSKNEJDNSJKLSNKWLMAKDOWMFCLKSsassyhwywjsgagkcdj1678293"
+console.log(longestChar(str))
