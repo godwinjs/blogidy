@@ -79,7 +79,7 @@ async function clickSequence(page){
             const button = await page.$(`div[data-token="${gameSequence[i]}"]`);
             if (button) {
                 await button.click();
-                await page.evaluate(() => new Promise(resolve => setTimeout(resolve, 150)));
+                await page.evaluate(() => new Promise(resolve => setTimeout(resolve, 100)));
                 // await button.waitForSelector(`active`)
                 // await page.click(`div[data-token="${gameSequence[i]}"]`, { delay: 300, clickCount: 1})
                 console.log('cliked sequence...', gameSequence[i])
@@ -150,8 +150,31 @@ async function playGame(page, clrInt){
             console.log('User navigated to:', frame.url());
             if( frame.url() === 'https://lights.devfestlagos.com/game' ){
                 // await mainFrameVars(mainFrame)
-                await addEvents(page)
                 await playGame(page)
+                // 
+                page.waitForSelector('div.controls') //{ timeout: 0}
+
+                const controls = await page.$$eval('div.controls', (El) => El.map(E => {
+
+                    let startBtn = E.querySelector('button#start-game');
+                    let leaderboardBtn = E.querySelector('a[href="/leaderboard"]')
+                    // leaderboardBtn.answer = answer
+                    function answer(){
+                        leaderboardBtn.textContent = "Answer";
+                        leaderboardBtn.setAttribute('href', '#');
+            
+                        console.log('listeneer > answer button and variables prepared..', window.vars)
+                    }
+
+                    startBtn.removeEventListener('click', answer )
+
+                    startBtn.addEventListener('click', answer)
+
+                    // leaderboardBtn.addEventListener('click', window.answer)
+            
+                    return [startBtn.textContent, leaderboardBtn.textContent]
+                }))
+                console.log('controls > navigation > game', controls)
             }
             if( frame.url() === 'https://lights.devfestlagos.com/game#'){
                 await clickSequence(page)
@@ -160,29 +183,27 @@ async function playGame(page, clrInt){
         }
     });
 
-    async function addEvents() {
-        
-    }
-    page.waitForSelector('div.controls') //{ timeout: 0}
+    // async function addEvents(page) {
+    //     page.waitForSelector('div.controls') //{ timeout: 0}
+    // }
 
-        const controls = await page.$$eval('div.controls', (El) => El.map(E => {
-    
-            let startBtn = E.querySelector('button#start-game');
-            let leaderboardBtn = E.querySelector('a[href="/leaderboard"]')
-            // leaderboardBtn.answer = answer
-    
-            startBtn.addEventListener('click', function (){
-                leaderboardBtn.textContent = "Answer";
-                leaderboardBtn.setAttribute('href', '#');
-    
-                console.log('listeneer > answer button and variables prepared..', window.vars)
-            })
-            // leaderboardBtn.addEventListener('click', window.answer)
-    
-            return [startBtn.textContent, leaderboardBtn.textContent]
-        }))
-        console.log('controls', controls)
+    const controls = await page.$$eval('div.controls', (El) => El.map(E => {
 
+        let startBtn = E.querySelector('button#start-game');
+        let leaderboardBtn = E.querySelector('a[href="/leaderboard"]')
+        // leaderboardBtn.answer = answer
+
+        startBtn.addEventListener('click', function (){
+            leaderboardBtn.textContent = "Answer";
+            leaderboardBtn.setAttribute('href', '#');
+
+            console.log('listeneer > answer button and variables prepared..', window.vars)
+        })
+        // leaderboardBtn.addEventListener('click', window.answer)
+
+        return [startBtn.textContent, leaderboardBtn.textContent]
+    }))
+    console.log('controls > baseEvent', controls)
 
     // console.log(page)
 })()
