@@ -1,4 +1,4 @@
-function longestChar(s) {
+function longChar(s) {
     let count = 0;
     let map = {}
     
@@ -28,4 +28,15 @@ function longestChar(s) {
 }
     
 const str = "aakiAKDNEKSKSKNEJDNSJKLSNKWLMAKDOWMFCLKSsassyhwywjsgagkcdj1678293"
-console.log(longestChar(str))
+// console.log(longestChar(str))
+console.log(longestAlpha('HHHty7382LL;;'))
+
+function longestAlpha(str) {
+  const map = {};
+
+  for (let i = 0; i < str.length; i++ ){
+    if(/a-zA-Z/.test()){
+      console.log(str[i])
+    }
+  }
+}
